@@ -1,0 +1,35 @@
+﻿@page "/empleados/detalle/{Id:int}"
+@using Prueba_desarrollador_Andres_Cifuentes.Interfaces
+@using Prueba_desarrollador_Andres_Cifuentes.Models
+@inject IEmpleados EmpleadosService
+@inject NavigationManager Nav
+
+<h3>Detalle Empleado</h3>
+
+@if (empleado == null)
+{
+    <p>Cargando...</p>
+}
+else
+{
+    <p><b>Nombre:</b> @empleado.Nombre</p>
+    <p><b>Posición:</b> @empleado.Posicion</p>
+    <p><b>Salario:</b> @empleado.SalarioBase</p>
+
+    <button @onclick="Volver">Volver</button>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private EmpleadosModel? empleado;
+
+    protected override async Task OnInitializedAsync()
+    {
+        empleado = await EmpleadosService.GetByIdAsync(Id);
+    }
+
+    private void Volver()
+        => Nav.NavigateTo("/empleados");
+}

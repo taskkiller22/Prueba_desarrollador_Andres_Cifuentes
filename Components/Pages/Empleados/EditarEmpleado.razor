@@ -1,0 +1,46 @@
+﻿@page "/empleados/editar/{Id:int}"
+@using Prueba_desarrollador_Andres_Cifuentes.Interfaces
+@using Prueba_desarrollador_Andres_Cifuentes.Models
+@inject IEmpleados EmpleadosService
+@inject NavigationManager Nav
+
+<h3>Editar Empleado</h3>
+
+@if (empleado == null)
+{
+    <p>Cargando...</p>
+}
+else
+{
+    <EditForm Model="empleado" OnValidSubmit="Actualizar">
+        <DataAnnotationsValidator />
+
+        <InputText @bind-Value="empleado.Nombre" />
+        <InputText @bind-Value="empleado.Posicion" />
+        <InputNumber @bind-Value="empleado.SalarioBase" />
+
+        <button type="submit">Actualizar</button>
+        <button type="button" @onclick="Volver">Cancelar</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private EmpleadosModel? empleado;
+
+    protected override async Task OnInitializedAsync()
+    {
+        empleado = await EmpleadosService.GetByIdAsync(Id);
+    }
+
+    private async Task Actualizar()
+    {
+        await EmpleadosService.AddAsync(empleado!);
+        Nav.NavigateTo("/empleados");
+    }
+
+    private void Volver()
+        => Nav.NavigateTo("/empleados");
+}

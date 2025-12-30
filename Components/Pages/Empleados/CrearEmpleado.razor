@@ -1,0 +1,42 @@
+﻿@page "/empleados/crear"
+@using Prueba_desarrollador_Andres_Cifuentes.Interfaces
+@using Prueba_desarrollador_Andres_Cifuentes.Models
+@inject IEmpleados EmpleadosService
+@inject NavigationManager Nav
+
+<h3>Crear Empleado</h3>
+
+<EditForm Model="empleado" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div>
+        <label>Nombre</label>
+        <InputText @bind-Value="empleado.Nombre" />
+    </div>
+
+    <div>
+        <label>Posición</label>
+        <InputText @bind-Value="empleado.Posicion" />
+    </div>
+
+    <div>
+        <label>Salario</label>
+        <InputNumber @bind-Value="empleado.SalarioBase" />
+    </div>
+
+    <button type="submit">Guardar</button>
+    <button type="button" @onclick="Volver">Cancelar</button>
+</EditForm>
+
+@code {
+    private EmpleadosModel empleado = new();
+
+    private async Task Guardar()
+    {
+        await EmpleadosService.AddAsync(empleado);
+        Nav.NavigateTo("/empleados");
+    }
+
+    private void Volver()
+        => Nav.NavigateTo("/empleados");
+}

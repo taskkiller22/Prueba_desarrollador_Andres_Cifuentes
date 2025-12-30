@@ -1,0 +1,56 @@
+﻿/*
+Tablas
+*/
+
+CREATE TABLE Empleados (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Nombre NVARCHAR(100) NOT NULL,
+    Codigo INT NOT NULL,
+    Posicion NVARCHAR(100) NOT NULL,
+    SalarioBase DECIMAL(18,2) NOT NULL,
+
+    SupervisorId INT NULL,
+    GrupoId INT NOT NULL,
+
+    CONSTRAINT FK_Empleados_Grupos
+        FOREIGN KEY (GrupoId)
+        REFERENCES Grupos(Id),
+
+    CONSTRAINT FK_Empleados_Supervisor
+        FOREIGN KEY (SupervisorId)
+        REFERENCES Empleados(Id)
+);
+
+
+CREATE TABLE Grupos (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    OficinaNombre NVARCHAR(100) NOT NULL,
+    CodigoArea INT NOT NULL
+);
+
+/* 
+Indices
+*/
+CREATE INDEX IX_Empleados_GrupoId ON Empleados(GrupoId);
+CREATE INDEX IX_Empleados_SupervisorId ON Empleados(SupervisorId);
+CREATE INDEX IX_Empleados_Codigo ON Empleados(Codigo);
+
+
+/*
+Datos de prueba
+*/
+
+INSERT INTO Grupos (OficinaNombre, CodigoArea)
+VALUES 
+('Oficina Central', 601),
+('Sucursal Norte', 602);
+
+INSERT INTO Empleados (Nombre, Codigo, Posicion, SalarioBase, GrupoId)
+VALUES
+('Juan Pérez', 1001, 'Developer', 5000, 1),
+('Ana Gómez', 1002, 'QA', 4000, 1);
+
+UPDATE Empleados
+SET SupervisorId = 1
+WHERE Id = 2;
+
